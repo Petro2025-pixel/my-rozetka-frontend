@@ -13,11 +13,15 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 
+const getImageUrl = imagePath => {
+  if (!imagePath) return `${import.meta.env.BASE_URL}images/laptop-common.jpg`;
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
+  const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
+  return `${import.meta.env.BASE_URL}${cleanPath}`;
+};
+
 const ProductPreviewModal = ({ open, handleClose, product }) => {
   if (!product) return null;
-
-  const API_BASE =
-    window.location.hostname === 'localhost' ? 'http://localhost:3001' : window.location.origin;
 
   return (
     <Modal
@@ -63,6 +67,7 @@ const ProductPreviewModal = ({ open, handleClose, product }) => {
                 '&:hover': { bgcolor: 'white' },
               }}
               size="small"
+              aria-label="close"
             >
               <CloseIcon />
             </IconButton>
@@ -80,9 +85,7 @@ const ProductPreviewModal = ({ open, handleClose, product }) => {
             >
               <CardMedia
                 component="img"
-                image={
-                  product.image?.startsWith('http') ? product.image : `${API_BASE}${product.image}`
-                }
+                image={getImageUrl(product.image)}
                 alt={product.name}
                 sx={{
                   maxHeight: '100%',

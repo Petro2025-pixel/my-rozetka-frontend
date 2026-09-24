@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,7 +16,7 @@ function App() {
   return (
     <ThemeProvider theme={rozetkaTheme}>
       <CssBaseline />
-      <BrowserRouter basename={import.meta.env.BASE_URL}>
+      <HashRouter>
         <Routes>
           <Route
             path="/login"
@@ -36,7 +36,7 @@ function App() {
 
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </ThemeProvider>
   );
 }

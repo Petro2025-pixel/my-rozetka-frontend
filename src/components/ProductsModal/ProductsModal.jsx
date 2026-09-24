@@ -12,7 +12,12 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { Form, Field } from 'react-final-form';
 
-const DEFAULT_IMAGE = '/images/laptop-common.jpg';
+const getImageUrl = imagePath => {
+  if (!imagePath) return `${import.meta.env.BASE_URL}images/laptop-common.jpg`;
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
+  const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
+  return `${import.meta.env.BASE_URL}${cleanPath}`;
+};
 
 const modalStyle = {
   position: 'absolute',
@@ -76,7 +81,12 @@ const ProductsModal = ({ open, handleClose, product, onSubmit }) => {
             <Form
               initialValues={product || {}}
               onSubmit={values => {
-                alert('Please note: in the demo mode, saving on the server is disabled.');
+                if (onSubmit) {
+                  onSubmit({
+                    ...values,
+                    image: getImageUrl(values.image),
+                  });
+                }
                 handleClose();
               }}
               render={({ handleSubmit }) => (

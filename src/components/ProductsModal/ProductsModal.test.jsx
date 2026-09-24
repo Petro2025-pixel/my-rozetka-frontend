@@ -16,6 +16,10 @@ describe('ProductsModal', () => {
     description: 'Test description',
   };
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   test('renders add product modal', () => {
     render(
       <ProductsModal
@@ -61,10 +65,7 @@ describe('ProductsModal', () => {
     expect(mockHandleClose).toHaveBeenCalledTimes(1);
   });
 
-  test('submits form with correct values', async () => {
-    // Мокаем alert, чтобы тест не падал из-за window.alert
-    vi.spyOn(window, 'alert').mockImplementation(() => {});
-
+  test('submits form with correct values and triggers onSubmit and handleClose', async () => {
     render(
       <ProductsModal
         open={true}
@@ -84,7 +85,13 @@ describe('ProductsModal', () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(mockHandleClose).toHaveBeenCalled();
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          category: 'Phones',
+          name: 'iPhone 15',
+        })
+      );
+      expect(mockHandleClose).toHaveBeenCalledTimes(1);
     });
   });
 });

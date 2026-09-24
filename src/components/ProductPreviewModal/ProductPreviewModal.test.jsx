@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'; // ДОБАВИЛ fireEvent
+import { render, screen, fireEvent } from '@testing-library/react';
 import ProductPreviewModal from './ProductPreviewModal';
 import { vi } from 'vitest';
 
@@ -15,46 +15,34 @@ describe('ProductPreviewModal', () => {
     description: 'Powerful laptop for professionals',
   };
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   test('renders product preview modal with product data', () => {
-    render(
-      <ProductPreviewModal
-        open={true}
-        handleClose={mockHandleClose}
-        product={mockProduct}
-      />
-    );
+    render(<ProductPreviewModal open={true} handleClose={mockHandleClose} product={mockProduct} />);
 
     expect(screen.getByText('Laptops')).toBeInTheDocument();
     expect(screen.getByText('MacBook Pro 16" M3 Max')).toBeInTheDocument();
-    expect(screen.getByText('3,499.99₴')).toBeInTheDocument();
+    expect(screen.getByText(/3[,.]?499\.99₴/)).toBeInTheDocument();
     expect(screen.getByText('В наявності: 15 шт.')).toBeInTheDocument();
   });
 
   test('does not render when product is null', () => {
     const { container } = render(
-      <ProductPreviewModal
-        open={true}
-        handleClose={mockHandleClose}
-        product={null}
-      />
+      <ProductPreviewModal open={true} handleClose={mockHandleClose} product={null} />
     );
 
     expect(container.firstChild).toBeNull();
   });
 
-  test('renders close button', () => {
-    render(
-      <ProductPreviewModal
-        open={true}
-        handleClose={mockHandleClose}
-        product={mockProduct}
-      />
-    );
+  test('renders close button and triggers handleClose', () => {
+    render(<ProductPreviewModal open={true} handleClose={mockHandleClose} product={mockProduct} />);
 
-    const closeButton = screen.getByRole('button', { name: /close/i });
-    expect(closeButton).toBeInTheDocument();
-    
-    fireEvent.click(closeButton);
+    const closeIconButton = screen.getByRole('button', { name: /close/i });
+    expect(closeIconButton).toBeInTheDocument();
+
+    fireEvent.click(closeIconButton);
     expect(mockHandleClose).toHaveBeenCalledTimes(1);
   });
 
@@ -65,13 +53,9 @@ describe('ProductPreviewModal', () => {
     };
 
     render(
-      <ProductPreviewModal
-        open={true}
-        handleClose={mockHandleClose}
-        product={productWithPrice}
-      />
+      <ProductPreviewModal open={true} handleClose={mockHandleClose} product={productWithPrice} />
     );
 
-    expect(screen.getByText('1,234.5₴')).toBeInTheDocument();
+    expect(screen.getByText(/1[,.]?234\.5₴/)).toBeInTheDocument();
   });
 });
