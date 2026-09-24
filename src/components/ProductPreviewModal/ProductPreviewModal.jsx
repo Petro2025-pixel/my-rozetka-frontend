@@ -12,13 +12,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-
-const getImageUrl = imagePath => {
-  if (!imagePath) return `${import.meta.env.BASE_URL}images/laptop-common.jpg`;
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) return imagePath;
-  const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
-  return `${import.meta.env.BASE_URL}${cleanPath}`;
-};
+import { getImageUrl } from '../../utils/getImageUrl';
 
 const ProductPreviewModal = ({ open, handleClose, product }) => {
   if (!product) return null;
@@ -87,6 +81,9 @@ const ProductPreviewModal = ({ open, handleClose, product }) => {
                 component="img"
                 image={getImageUrl(product.image)}
                 alt={product.name}
+                onError={e => {
+                  e.target.src = getImageUrl('/images/laptop-common.jpg');
+                }}
                 sx={{
                   maxHeight: '100%',
                   maxWidth: '100%',

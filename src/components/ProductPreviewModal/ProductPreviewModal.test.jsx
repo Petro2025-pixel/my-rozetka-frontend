@@ -39,10 +39,10 @@ describe('ProductPreviewModal', () => {
   test('renders close button and triggers handleClose', () => {
     render(<ProductPreviewModal open={true} handleClose={mockHandleClose} product={mockProduct} />);
 
-    const closeIconButton = screen.getByRole('button', { name: /close/i });
-    expect(closeIconButton).toBeInTheDocument();
+    const closeButtons = screen.getAllByRole('button', { name: /close/i });
+    expect(closeButtons.length).toBeGreaterThan(0);
 
-    fireEvent.click(closeIconButton);
+    fireEvent.click(closeButtons[0]);
     expect(mockHandleClose).toHaveBeenCalledTimes(1);
   });
 

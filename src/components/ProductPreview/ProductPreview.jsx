@@ -5,15 +5,12 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Header from '../Header/Header';
 import ProductsModal from '../ProductsModal/ProductsModal';
 import { fetchProductsRequest, addProductRequest } from '../../store/slices/productsSlice';
+import { getImageUrl } from '../../utils/getImageUrl';
 
 const ProductPreview = () => {
   const products = useSelector(state => state.products.list);
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
-
-  
-  const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') || 
-                   'https://my-rozetka-backend-production.up.railway.app';
 
   useEffect(() => {
     dispatch(fetchProductsRequest());
@@ -31,28 +28,6 @@ const ProductPreview = () => {
 
     dispatch(addProductRequest(newProduct));
     setOpenModal(false);
-  };
-
-  
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) {
-      return `${API_BASE}/images/laptop-common.jpg`;
-    }
-
-  
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-      return imagePath;
-    }
-
-    if (imagePath.startsWith('/images')) {
-      return `${API_BASE}${imagePath}`;
-    }
-
-    if (!imagePath.startsWith('/')) {
-      return `${API_BASE}/images/${imagePath}`;
-    }
-
-    return `${API_BASE}${imagePath}`;
   };
 
   return (
@@ -93,22 +68,21 @@ const ProductPreview = () => {
                     justifyContent: 'center',
                     mb: 2,
                     overflow: 'hidden',
-                    backgroundColor: '#f5f5f5', 
+                    backgroundColor: '#f5f5f5',
                   }}
                 >
                   <CardMedia
                     component="img"
                     image={getImageUrl(item.image)}
                     alt={item.name}
-                    sx={{ 
-                      maxHeight: '100%', 
-                      maxWidth: '100%', 
+                    sx={{
+                      maxHeight: '100%',
+                      maxWidth: '100%',
                       objectFit: 'contain',
-                      bgcolor: 'white'
+                      bgcolor: 'white',
                     }}
-                    onError={(e) => {
-                      
-                      e.target.src = `${API_BASE}/images/laptop-common.jpg`;
+                    onError={e => {
+                      e.target.src = getImageUrl('/images/laptop-common.jpg');
                     }}
                   />
                 </Box>
